@@ -1,102 +1,119 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
     <style>
-    html,
-    body,
-    #container {
-      width: 100%;
-      height: 100%;
-    }
+        html,
+        body,
+        #container {
+            width: 100%;
+            height: 100%;
+        }
     </style>
-    <title>疫情防控地图</title>
+    <title>多边形的绘制和编辑</title>
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
     <script type="text/javascript">
         window._AMapSecurityConfig = {
-            securityJsCode:'102623bb59657a5d91c5e35117cee464',
+            securityJsCode: '102623bb59657a5d91c5e35117cee464',
         }
     </script>
-    <script src="https://webapi.amap.com/maps?v=2.0&key=abdf3b2712ef0bb623bfb858890fafb5&plugin=AMap.PolygonEditor"></script>
+    <script
+        src="https://webapi.amap.com/maps?v=2.0&key=abdf3b2712ef0bb623bfb858890fafb5&plugin=AMap.PolygonEditor"></script>
     <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
 </head>
+
 <body>
-<div id="container"></div>
-<div class="input-card" style="width: 120px">
-   <button class="btn" onclick="polyEditor.open()" style="margin-bottom: 5px">开始编辑</button> 
-   <button class="btn" onclick="polyEditor.close()">结束编辑</button> 
-</div>
-<script type="text/javascript">
-    var map = new AMap.Map("container", {
-      zoom: 14,
-      viewMode: '3D',
-    });
-    map.plugin('AMap.Geolocation', function () {
-        geolocation = new AMap.Geolocation({
-            enableHighAccuracy: true,//是否使用高精度定位，默认:true
-            timeout: 10000,          //超过10秒后停止定位，默认：无穷大
-            maximumAge: 0,           //定位结果缓存0毫秒，默认：0
-            convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-            showButton: true,        //显示定位按钮，默认：true
-            buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
-            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-            showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
-            showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-            panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
-            zoomToAccuracy:true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+    <div id="container"></div>
+    <div class="input-card" style="width: 120px">
+        <button class="btn" onclick="createPolygon()" style="margin-bottom: 5px">新建</button>
+        <button class="btn" onclick="polyEditor.open()" style="margin-bottom: 5px">开始编辑</button>
+        <button class="btn" onclick="polyEditor.close()">结束编辑</button>
+    </div>
+    <script type="text/javascript">
+        var map = new AMap.Map("container", {
+            zoom: 14,
+            viewMode: '3D',
         });
-        map.addControl(geolocation);
-        geolocation.getCurrentPosition();
-        AMap.Event.addListener(geolocation, 'complete', onComplete);//返回定位信息
-        AMap.Event.addListener(geolocation, 'error', onError);      //返回定位出错信息
-    });
-    var path = [
-      [116.403322, 39.920255],
-      [116.410703, 39.897555],
-      [116.402292, 39.892353],
-      [116.389846, 39.891365]
-    ]
-    var path1 = [
-      [116.453322, 39.920255],
-      [116.460703, 39.897555],
-      [116.452292, 39.892353],
-      [116.439846, 39.891365]
-    ]
+        map.plugin('AMap.Geolocation', function () {
+            geolocation = new AMap.Geolocation({
+                enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
+                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                showButton: true,        //显示定位按钮，默认：true
+                buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
+                showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
+                panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+                zoomToAccuracy: true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+            });
+            map.addControl(geolocation);
+            geolocation.getCurrentPosition();
+            AMap.Event.addListener(geolocation, 'complete', onComplete);//返回定位信息
+            AMap.Event.addListener(geolocation, 'error', onError);      //返回定位出错信息
+            function onComplete(data) {
+                console.log(data);
+            }
 
-    var polygon = new AMap.Polygon({
-      path: path,
-      strokeColor: "#FF33FF",
-      strokeWeight: 6,
-      strokeOpacity: 0.2,
-      fillOpacity: 0.4,
-      fillColor: '#1791fc',
-      zIndex: 50,
-      bubble: true,
-    })
-    var polygon1 = new AMap.Polygon({
-      path: path1,
-      strokeColor: "green",
-      strokeWeight: 6,
-      strokeOpacity: 0.2,
-      fillOpacity: 0.4,
-      fillColor: '#1791fc',
-      zIndex: 50,
-      bubble: true,
+            function onError(data) {
+                // 定位出错
+            }
+        });
+        var path = [
+            [116.403322, 39.920255],
+            [116.410703, 39.897555],
+            [116.402292, 39.892353],
+            [116.389846, 39.891365]
+        ]
+        var path1 = [
+            [116.453322, 39.920255],
+            [116.460703, 39.897555],
+            [116.452292, 39.892353],
+            [116.439846, 39.891365]
+        ]
 
-    })
+        var polygon = new AMap.Polygon({
+            path: path,
+            strokeColor: "#FF33FF",
+            strokeWeight: 6,
+            strokeOpacity: 0.2,
+            fillOpacity: 0.4,
+            fillColor: '#1791fc',
+            zIndex: 50,
+            bubble: true,
+        })
+        var polygon1 = new AMap.Polygon({
+            path: path1,
+            strokeColor: "green",
+            strokeWeight: 6,
+            strokeOpacity: 0.2,
+            fillOpacity: 0.4,
+            fillColor: '#1791fc',
+            zIndex: 50,
+            bubble: true,
 
-    map.add([polygon, polygon1])
+        })
 
-    // 缩放地图到合适的视野级别
-    map.setFitView()
-    var polyEditor;
-      // var polyEditor = new AMap.PolyEditor(map, polygon)
-      // polyEditor = new AMap.PolygonEditor(map)
-    polyEditor = new AMap.PolygonEditor(map, polygon);
-    polyEditor.addAdsorbPolygons(polygon1)
-    polyEditor.open();
-  </script>
+        map.add([polygon, polygon1])
+
+        // 缩放地图到合适的视野级别
+        map.setFitView()
+        var polyEditor;
+        // var polyEditor = new AMap.PolyEditor(map, polygon)
+        // polyEditor = new AMap.PolygonEditor(map)
+        polyEditor = new AMap.PolygonEditor(map, polygon);
+        polyEditor.addAdsorbPolygons(polygon1)
+        polyEditor.open();
+        function createPolygon() {
+            polyEditor.close();
+            polyEditor.setTarget();
+            polyEditor.open();
+        }
+    </script>
 </body>
+
 </html>
