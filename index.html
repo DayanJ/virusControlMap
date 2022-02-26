@@ -131,8 +131,8 @@
         function closePolygon() {
             polyEditor.close();
             var poly = polyEditor.getTarget();
-            console.log(poly);
-            console.log(JSON.stringify(poly));
+            console.log(poly.getPath());
+            console.log(JSON.stringify(poly.getPath()));
         }
     </script>
 </body>
