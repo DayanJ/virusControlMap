@@ -28,6 +28,8 @@
     <script
         src="https://webapi.amap.com/maps?v=2.0&key=abdf3b2712ef0bb623bfb858890fafb5&plugin=AMap.PolygonEditor"></script>
     <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <script src="fengkongqu.js"></script>
+    <script src="guankongqu.js"></script>
 </head>
 
 <body>
@@ -52,49 +54,6 @@
         <button class="btn" onclick="closePolygon()">结束编辑</button>
     </div>
     <script type="text/javascript">
-      var gkPath = [
-    [
-        [114.045677, 22.512432],
-        [114.048125, 22.517051],
-        [114.048351, 22.517451],
-        [114.050921, 22.516329],
-        [114.053586, 22.515642],
-        [114.055884, 22.515416],
-        [114.055563, 22.514024],
-        [114.055479, 22.513607],
-        [114.055432, 22.512763],
-        [114.055582, 22.511902],
-        [114.055658, 22.511789],
-        [114.054236, 22.511458],
-        [114.052155, 22.511319],
-        [114.049857, 22.511545],
-        [114.04771, 22.511858]
-    ], [
-        [114.031272, 22.529357],
-        [114.031345, 22.528925],
-        [114.031408, 22.528845],
-        [114.031497, 22.528805],
-        [114.032422, 22.528586],
-        [114.032324, 22.528807],
-        [114.032269, 22.529068],
-        [114.032188, 22.529365],
-        [114.03215, 22.529523]
-    ]
-];
-      var fengkongPath =[
-	[
-		[114.053388, 22.514232],
-		[114.05335, 22.514047],
-		[114.053571, 22.51401],
-		[114.053608, 22.51419]
-	],
-	[
-		[114.032841, 22.529009],
-		[114.032921, 22.528451],
-		[114.033403, 22.528537],
-		[114.033277, 22.529093]
-	]
-];
         var map = new AMap.Map("container", {
             zoom: 14,
             viewMode: '3D',
@@ -141,18 +100,6 @@
         //解析定位错误信息
         function onError(data) {
         }
-        var path = [
-            [114.053388, 22.514232],
-            [114.05335, 22.514047],
-            [114.053571, 22.51401],
-            [114.053608, 22.51419]
-        ]
-        var path1 = [
-            [114.032841, 22.529009],
-            [114.032921, 22.528451],
-            [114.033403, 22.528537],
-            [114.033277, 22.529093]
-        ]
         var Polygons = new Array();
         for (let i = 0; i < fengkongPath.length; i++) {
             let path = fengkongPath[i];
@@ -168,7 +115,7 @@
             });
             Polygons.push(polygon);
         }
-        for (let j = 0; j < gkPath.length; i++) {
+        for (let j = 0; j < gkPath.length; j++) {
             let path = gkPath[j];
             var polygon = new AMap.Polygon({
                 path: path,
