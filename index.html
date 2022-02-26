@@ -30,6 +30,7 @@
     <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
     <script src="fengkongqu.js"></script>
     <script src="guankongqu.js"></script>
+    <script src="fangfanqu.js"></script>
 </head>
 
 <body>
@@ -129,7 +130,20 @@
             });
             Polygons.push(polygon);
         }
-
+        for(let m=0;m < ffPath.length;m++){
+            let path = ffPath[m];
+            var polygon = new AMap.Polygon({
+                path: path,
+                strokeColor: "#ffd633",
+                strokeWeight: 6,
+                strokeOpacity: 0.2,
+                fillOpacity: 0.4,
+                fillColor: '#ffd633',
+                zIndex: 50,
+                bubble: true,
+            });
+            Polygons.push(polygon);
+        }
 
         map.add(Polygons)
 
