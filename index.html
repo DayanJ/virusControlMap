@@ -12,65 +12,73 @@
       height: 100%;
     }
     </style>
-    <title>多边形编辑器吸附功能</title>
+    <title>多边形的绘制和编辑</title>
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
     <script type="text/javascript">
         window._AMapSecurityConfig = {
             securityJsCode:'102623bb59657a5d91c5e35117cee464',
         }
-</script>
-    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.15&key=abdf3b2712ef0bb623bfb858890fafb5&plugin=AMap.PolygonEditor"></script> 
+    </script>
+    <script src="https://webapi.amap.com/maps?v=2.0&key=abdf3b2712ef0bb623bfb858890fafb5&plugin=AMap.PolygonEditor"></script>
     <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
 </head>
 <body>
 <div id="container"></div>
 <div class="input-card" style="width: 120px">
-    <button class="btn" onclick="createPolygon()" style="margin-bottom: 5px">新建</button>
-    <button class="btn" onclick="polyEditor.open()" style="margin-bottom: 5px">开始编辑</button>
-    <button class="btn" onclick="polyEditor.close()">结束编辑</button>
+   <button class="btn" onclick="polyEditor.open()" style="margin-bottom: 5px">开始编辑</button> 
+   <button class="btn" onclick="polyEditor.close()">结束编辑</button> 
 </div>
 <script type="text/javascript">
     var map = new AMap.Map("container", {
-      center: [116.471354, 39.994257],
-      zoom: 16.8
+      center: [116.400274, 39.905812],
+      zoom: 14,
+      viewMode: '3D',
     });
 
-    var path1 = [[116.475334, 39.997534], [116.476627, 39.998315], [116.478603, 39.99879], [116.478529, 40.000296], [116.475082, 40.000151], [116.473421, 39.998717]]
-    var path2 = [[116.474595, 40.001321], [116.473526, 39.999865], [116.476284, 40.000917]]
-    var polygon1 = new AMap.Polygon({
-      path: path1
+    var path = [
+      [116.403322, 39.920255],
+      [116.410703, 39.897555],
+      [116.402292, 39.892353],
+      [116.389846, 39.891365]
+    ]
+    var path1 = [
+      [116.453322, 39.920255],
+      [116.460703, 39.897555],
+      [116.452292, 39.892353],
+      [116.439846, 39.891365]
+    ]
+
+    var polygon = new AMap.Polygon({
+      path: path,
+      strokeColor: "#FF33FF",
+      strokeWeight: 6,
+      strokeOpacity: 0.2,
+      fillOpacity: 0.4,
+      fillColor: '#1791fc',
+      zIndex: 50,
+      bubble: true,
     })
-    var polygon2 = new AMap.Polygon({
-      path: path2
+    var polygon1 = new AMap.Polygon({
+      path: path1,
+      strokeColor: "green",
+      strokeWeight: 6,
+      strokeOpacity: 0.2,
+      fillOpacity: 0.4,
+      fillColor: '#1791fc',
+      zIndex: 50,
+      bubble: true,
+
     })
 
-    map.add([polygon1, polygon2]);
-    map.setFitView();
-    var polyEditor = new AMap.PolygonEditor(map);
-    polyEditor.addAdsorbPolygons([polygon1, polygon2]);
-    polyEditor.on('add', function (data) {
-      console.log(data);
-      var polygon = data.target;
-      polyEditor.addAdsorbPolygons(polygon);
-      polygon.on('dblclick', () => {
-        polyEditor.setTarget(polygon);
-        polyEditor.open();
-      })
-    })
-    polygon1.on('dblclick', () => {
-      polyEditor.setTarget(polygon1);
-      polyEditor.open();
-    })
-    polygon2.on('dblclick', () => {
-      polyEditor.setTarget(polygon2);
-      polyEditor.open();
-    })
-    function createPolygon() {
-      polyEditor.close();
-      polyEditor.setTarget();
-      polyEditor.open();
-    }
-    polyEditor.setTarget(polygon2);
+    map.add([polygon, polygon1])
+
+    // 缩放地图到合适的视野级别
+    map.setFitView()
+    var polyEditor;
+      // var polyEditor = new AMap.PolyEditor(map, polygon)
+      // polyEditor = new AMap.PolygonEditor(map)
+    polyEditor = new AMap.PolygonEditor(map, polygon);
+    polyEditor.addAdsorbPolygons(polygon1)
     polyEditor.open();
   </script>
 </body>
