@@ -12,6 +12,10 @@
             width: 100%;
             height: 100%;
         }
+
+        .info {
+            width: 26rem;
+        }
     </style>
     <title>多边形的绘制和编辑</title>
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
@@ -27,42 +31,59 @@
 
 <body>
     <div id="container"></div>
+    <div class="info">
+        <h4 id="status"></h4>
+        <hr>
+        <p id="result"></p>
+        <hr>
+        <p>由于众多浏览器已不再支持非安全域的定位请求，为保位成功率和精度，请升级您的站点到HTTPS。</p>
+    </div>
     <div class="input-card" style="width: 120px">
         <button class="btn" onclick="createPolygon()" style="margin-bottom: 5px">新建</button>
         <button class="btn" onclick="polyEditor.open()" style="margin-bottom: 5px">开始编辑</button>
-        <button class="btn" onclick="polyEditor.close()">结束编辑</button>
+        <button class="btn" onclick="closePolygon()">结束编辑</button>
     </div>
     <script type="text/javascript">
         var map = new AMap.Map("container", {
             zoom: 14,
             viewMode: '3D',
+            resizeEnable: true
         });
         map.plugin('AMap.Geolocation', function () {
-            geolocation = new AMap.Geolocation({
+            var geolocation = new AMap.Geolocation({
                 enableHighAccuracy: true,//是否使用高精度定位，默认:true
-                timeout: 10000,          //超过10秒后停止定位，默认：无穷大
-                maximumAge: 0,           //定位结果缓存0毫秒，默认：0
-                convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
-                showButton: true,        //显示定位按钮，默认：true
-                buttonPosition: 'RB',    //定位按钮停靠位置，默认：'LB'，左下角
-                buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-                showMarker: true,        //定位成功后在定位到的位置显示点标记，默认：true
-                showCircle: true,        //定位成功后用圆圈表示定位精度范围，默认：true
-                panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
-                zoomToAccuracy: true      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                timeout: 10000,          //超过10秒后停止定位，默认：5s
+                position: 'LB',    //定位按钮的停靠位置
+                offset: [10, 20], //定位按钮与设置的停靠位置的偏移量，默认：[10, 20]
+                zoomToAccuracy: true,   //定位成功后是否自动调整地图视野到定位点
+
             });
             map.addControl(geolocation);
-            geolocation.getCurrentPosition();
-            AMap.Event.addListener(geolocation, 'complete', onComplete);//返回定位信息
-            AMap.Event.addListener(geolocation, 'error', onError);      //返回定位出错信息
-            function onComplete(data) {
-                console.log(data);
-            }
-
-            function onError(data) {
-                console.log(data);
-            }
+            geolocation.getCurrentPosition(function (status, result) {
+                if (status == 'complete') {
+                    onComplete(result)
+                } else {
+                    onError(result)
+                }
+            });
         });
+        //解析定位结果
+        function onComplete(data) {
+            document.getElementById('status').innerHTML = '定位成功'
+            var str = [];
+            str.push('定位结果：' + data.position);
+            str.push('定位类别：' + data.location_type);
+            if (data.accuracy) {
+                str.push('精度：' + data.accuracy + ' 米');
+            }//如为IP精确定位结果则没有精度信息
+            str.push('是否经过偏移：' + (data.isConverted ? '是' : '否'));
+            document.getElementById('result').innerHTML = str.join('<br>');
+        }
+        //解析定位错误信息
+        function onError(data) {
+            document.getElementById('status').innerHTML = '定位失败'
+            document.getElementById('result').innerHTML = '失败原因排查信息:' + data.message + '</br>浏览器返回信息：' + data.originMessage;
+        }
         var path = [
             [116.403322, 39.920255],
             [116.410703, 39.897555],
@@ -112,6 +133,10 @@
             polyEditor.close();
             polyEditor.setTarget();
             polyEditor.open();
+        }
+        function closePolygon() {
+            var poly = polyEditor.getTarget();
+            console.log(polyEditor.getTarget().toString());
         }
     </script>
 </body>
