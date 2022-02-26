@@ -138,9 +138,9 @@
         var polyEditor;
         // var polyEditor = new AMap.PolyEditor(map, polygon)
         // polyEditor = new AMap.PolygonEditor(map)
-        polyEditor = new AMap.PolygonEditor(map, polygon);
-        polyEditor.addAdsorbPolygons(polygon1)
-        polyEditor.open();
+        polyEditor = new AMap.PolygonEditor(map);
+        //polyEditor.addAdsorbPolygons(polygon1)
+        //polyEditor.open();
         function createPolygon() {
             polyEditor.close();
             polyEditor.setTarget();
