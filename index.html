@@ -53,10 +53,10 @@
     </div>
     <script type="text/javascript">
         var map = new AMap.Map("container", {
-            center: [114.055669,22.533177],//中心点坐标
             zoom: 14,
             viewMode: '3D',
-            resizeEnable: true
+            resizeEnable: true,
+            center: [114.055669, 22.533177] //初始化地图中心点
         });
         //输入提示
         var autoOptions = {
@@ -99,16 +99,16 @@
         function onError(data) {
         }
         var path = [
-            [116.403322, 39.920255],
-            [116.410703, 39.897555],
-            [116.402292, 39.892353],
-            [116.389846, 39.891365]
+            [114.053388, 22.514232],
+            [114.05335, 22.514047],
+            [114.053571, 22.51401],
+            [114.053608, 22.51419]
         ]
         var path1 = [
-            [116.453322, 39.920255],
-            [116.460703, 39.897555],
-            [116.452292, 39.892353],
-            [116.439846, 39.891365]
+            [114.032841, 22.529009],
+            [114.032921, 22.528451],
+            [114.033403, 22.528537],
+            [114.033277, 22.529093]
         ]
 
         var polygon = new AMap.Polygon({
@@ -117,7 +117,7 @@
             strokeWeight: 6,
             strokeOpacity: 0.2,
             fillOpacity: 0.4,
-            fillColor: '#1791fc',
+            fillColor: '#FF33FF',
             zIndex: 50,
             bubble: true,
         })
